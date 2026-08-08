@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GestoriaAngular
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.9.
@@ -57,3 +58,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+=======
+# AngularGestoriaFrontEnd
+Aqui va el proyecto en agualar toda la parte del front
+>>>>>>> 24d6d95879caef2d2fac78ab38b485e55df4ca91
