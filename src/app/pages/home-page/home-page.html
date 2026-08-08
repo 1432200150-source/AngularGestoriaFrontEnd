@@ -1,0 +1,62 @@
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">
+        Hola de nuevo {{usuario()}}
+    </h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-plus fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">
+                         Usuarios
+                    </h5>
+                    <p class="card-text">
+                        Registrar un nuevo usuario en el sistema.
+                    </p>
+                    <a
+                        routerLink="/alta-usuario"
+                        class="btn btn-primary">
+                        Ir
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-table fs-1 text-success"></i>
+                    <h5 class="card-title mt-3">
+                        Tickets
+                    </h5>
+                    <p class="card-text">
+                        Gestionar tickets.
+                    </p>
+                    <a
+                        routerLink="/tickets"
+                        class="btn btn-success">
+                        ir
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-table fs-1 text-warning"></i>
+                    <h5 class="card-title mt-3">
+                        Escalados
+                    </h5>
+                    <p class="card-text">
+                        Solucionar tickets.
+                    </p>
+                    <a
+                        routerLink="/escalados"
+                        class="btn btn-primary">
+                        ir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

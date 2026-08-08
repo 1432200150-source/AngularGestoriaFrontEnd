@@ -1,0 +1,152 @@
+  .login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #3d546a, #617995);
+    padding: 15px;
+  }
+
+/* Tarjeta estilizada con sombra suave y bordes redondeados modernos */
+
+.card-login {
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(97, 121, 149, 0.15);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+/* Encabezado elegante sin las líneas rígidas de las tarjetas por defecto */
+.card-header-custom {
+  background-color: #ffffff;
+  padding: 35px 30px 10px 30px;
+  text-align: center;
+}
+
+.brand-icon {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(97, 121, 149, 0.1);
+  color: #617995;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  margin: 0 auto 15px auto;
+  font-size: 1.3rem;
+}
+
+.login-title {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 5px;
+}
+
+.login-subtitle {
+  color: #7f8c8d;
+  font-size: 0.88rem;
+  margin-bottom: 0;
+}
+
+/* Labels más profesionales */
+.form-label-custom {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Inputs con iconos internos y transiciones suaves */
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.form-control-custom {
+  padding-left: 40px; /* Espacio para el icono */
+  height: 46px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  font-size: 0.95rem;
+  color: #2d3748;
+  transition: all 0.2s ease;
+}
+
+/* Efecto Focus iluminado con tu paleta de color */
+.form-control-custom:focus {
+  border-color: #617995;
+  box-shadow: 0 0 0 3px rgba(97, 121, 149, 0.15);
+  outline: none;
+}
+
+.form-control-custom:focus + .input-icon {
+  color: #617995;
+}
+
+/* Botón sólido llamativo que hereda tus estilos preexistentes */
+.btn-login-custom {
+  background-color: #617995;
+  color: #ffffff;
+  height: 46px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-login-custom:hover {
+  background-color: #51657d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(97, 121, 149, 0.3);
+}
+
+.btn-login-custom:active {
+  transform: translateY(0);
+}
+
+.btn-login-custom:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #617995;
+    font-size: .95rem;
+}
+
+.form-control-custom {
+    padding-left: 42px;
+}
+.card-footer {
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+    font-size: .82rem;
+    color: #6c757d;
+    padding: 15px;
+}

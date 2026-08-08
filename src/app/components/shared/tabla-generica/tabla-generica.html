@@ -1,0 +1,95 @@
+<div class="card shadow-sm border-0">
+  
+  <!-- BARRA SUPERIOR: Título + Buscador Global -->
+  <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-2 px-3">
+    @if (titulo()) {
+      <h6 class="m-0 fw-bold text-secondary">{{ titulo() }}</h6>
+    } @else {
+      <div></div>
+    }
+
+    <!-- Buscador compacto estilo Bootstrap -->
+    @if (mostrarBuscador()) {
+      <div class="input-group input-group-sm" style="max-width: 240px;">
+        <span class="input-group-text bg-light border-end-0 text-muted">
+          <i class="bi bi-search"></i>
+        </span>
+        <input 
+          type="text" 
+          class="form-control bg-light border-start-0 ps-0" 
+          placeholder="Buscar..." 
+          [value]="busqueda()"
+          (input)="alBuscar($event)">
+      </div>
+    }
+  </div>
+
+  <div class="card-body p-0">
+    <ngx-datatable
+      class="material striped"
+      [rows]="$any(filasFiltradas())" 
+      [columnMode]="'force'"
+      [headerHeight]="30"
+      [footerHeight]="25" 
+      [rowHeight]="25"
+      [loadingIndicator]="cargando()"
+      [limit]="limitePorPagina()">
+      <ngx-datatable-row-detail #detalleRow [rowHeight]="alturaDetalle">
+            <ng-template
+                ngx-datatable-row-detail-template
+                let-row="row">
+                @if(detalleTemplate()){
+                    <ng-container
+                        *ngTemplateOutlet="
+                            detalleTemplate();
+                            context: { $implicit: row }
+                        ">
+                    </ng-container>
+                }
+            </ng-template>
+        </ngx-datatable-row-detail>
+      @for (col of columnas(); track col.prop) {
+      
+        <!-- CASO: Columna de Acciones Dinámicas -->
+        @if (col.type === 'actions') {
+          <ngx-datatable-column [name]="col.name" [prop]="col.prop" [width]="col.width" [flexGrow]="col.autoWidth ? 1 : 0" [sortable]="false">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div class="d-flex gap-1 justify-content-center">
+                
+                @for (btn of col.acciones; track btn.clave) {
+                  <button 
+                    type="button" 
+                    class="btn btn-sm border-0 p-0 px-1 {{ btn.colorClass || 'btn-outline-primary' }}" 
+                    [title]="btn.titulo || ''"
+                    (click)="ejecutarAccion(btn.clave, row)">
+                    <i 
+                      [class]="
+                        btn.iconoActivo && filaExpandida()?.(row)
+                          ? btn.iconoActivo
+                          : btn.icono
+                      "
+                      [class.icono-expandir]="btn.clave === 'expandir'"
+                      [class.abierto]="btn.clave === 'expandir' && filaExpandida()?.(row)">
+                    </i>
+                  </button>
+                }
+
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+        } 
+        <!-- CASO: Columna de Texto Normal -->
+        @else {
+          <ngx-datatable-column 
+            [name]="col.name" 
+            [prop]="col.prop" 
+            [width]="col.width || 150"
+            [sortable]="false">
+          </ngx-datatable-column>
+        }
+
+      }
+
+    </ngx-datatable>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { TablaUsuarios } from './tabla-usuarios';
+
+describe('TablaUsuarios', () => {
+  let component: TablaUsuarios;
+  let fixture: ComponentFixture<TablaUsuarios>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TablaUsuarios],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TablaUsuarios);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

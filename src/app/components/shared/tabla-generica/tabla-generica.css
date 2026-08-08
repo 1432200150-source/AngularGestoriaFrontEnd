@@ -1,0 +1,106 @@
+/* =========================================================
+   ESTILOS NGX-DATATABLE (Encabezado Café y Formato Compacto)
+   ========================================================= */
+
+/* 1. Fondo café para todo el header */
+::ng-deep .ngx-datatable .datatable-header {
+  background-color: #b9a894 !important;
+}
+
+/* 2. Celdas del encabezado: Texto blanco, negrita, tamaño normal y compacto */
+::ng-deep .ngx-datatable .datatable-header .datatable-header-cell {
+  background-color: #b9a894 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important; /* Negrita */
+  padding: 6px 10px !important; /* Compacto */
+  text-align: center !important;
+  font-size: 0.85rem !important;
+  text-transform: none !important; /* 👈 Quita las mayúsculas forzadas */
+}
+
+/* 3. Ocultar completamente las flechas de ordenamiento (sort) */
+::ng-deep .ngx-datatable .datatable-header .datatable-header-cell .sort-btn,
+::ng-deep .ngx-datatable .datatable-header .datatable-header-cell .sort-icon {
+  display: none !important; /* 👈 Oculta las flechitas */
+}
+
+/* 4. Celdas del cuerpo: Compactas */
+::ng-deep .ngx-datatable .datatable-body .datatable-body-row .datatable-body-cell {
+  padding: 6px 10px !important;
+  font-size: 0.85rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  line-height: 1.2 !important;
+
+   border-right: 1px solid #dee2e6 !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* 5. Filas intercaladas (striped) y hover */
+::ng-deep .ngx-datatable.striped .datatable-body .datatable-body-row:nth-child(even) {
+  background-color: #f8f9fa !important;
+}
+
+::ng-deep .ngx-datatable .datatable-body .datatable-body-row:hover {
+  background-color: #f1ede8 !important;
+  transition: background-color 0.15s ease;
+}
+
+/* 6. Botones e íconos de acciones */
+::ng-deep .ngx-datatable .datatable-body-cell .btn {
+  padding: 2px 6px !important;
+  opacity: 1 !important;
+  line-height: 1 !important;
+}
+
+::ng-deep .ngx-datatable .datatable-body-cell .btn i {
+  font-size: 1rem !important;
+  display: inline-block !important;
+  opacity: 1 !important;
+}
+
+/* 7. Footer */
+::ng-deep .ngx-datatable .datatable-footer {
+  background-color: #f8f9fa !important;
+  border-top: 1px solid #e9ecef !important;
+  padding: 4px 10px !important;
+}
+
+::ng-deep .ngx-datatable .datatable-footer .datatable-pager ul li.active a {
+  background-color: #b9a894 !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+  border-radius: 4px !important;
+}
+/* =========================================================
+   SOLUCIÓN AL SCROLL HORIZONTAL Y SALTO DE LÍNEA
+   ========================================================= */
+
+/* 1. Resetear el desbordamiento horizontal del contenedor principal */
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+/* 2. Forzar a la tabla y su contenedor interno a alinearse al 100% sin píxeles sobrantes */
+::ng-deep .ngx-datatable,
+::ng-deep .ngx-datatable .datatable-scroll {
+  width: 100% !important;
+}
+
+/* 3. Permitir salto de línea en las celdas y en el detalle desplegado */
+::ng-deep .ngx-datatable .datatable-body-cell,
+::ng-deep .ngx-datatable .datatable-row-detail {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: anywhere !important; /* Quiebra cadenas largas sin espacio */
+  word-break: break-word !important;
+}
+
+/* 4. Asegurar que el contenedor del detalle no fuerce ancho extra */
+::ng-deep .ngx-datatable .datatable-row-detail {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}

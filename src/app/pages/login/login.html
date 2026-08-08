@@ -1,0 +1,92 @@
+<div class="login-wrapper">
+
+    <div class="card card-login">
+
+        <div class="card-header-custom">
+
+            <div class="brand-icon">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+
+            <h3 class="login-title">
+                Iniciar sesión
+            </h3>
+
+            <p class="login-subtitle">
+                Ingresa tus credenciales para continuar
+            </p>
+
+        </div>
+
+        <form class="card-body p-4"
+              (submit)="ingresar($event)">
+
+            <!-- Usuario -->
+            <div class="mb-3">
+
+                <label class="form-label-custom">
+                    Usuario
+                    <span class="asterisco ms-1">*</span>
+                </label>
+
+                <div class="input-with-icon">
+
+                    <i class="bi bi-person input-icon"></i>
+
+                    <input
+                        type="text"
+                        class="form-control form-control-custom"
+                        placeholder="Ingrese su usuario"
+                        [formField]="loginForm.username!">
+
+                </div>
+
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+
+                <label class="form-label-custom">
+                    Contraseña
+                    <span class="asterisco ms-1">*</span>
+                </label>
+
+                <div class="input-with-icon">
+
+                    <i class="bi bi-lock input-icon"></i>
+
+                    <input
+                        type="password"
+                        class="form-control form-control-custom"
+                        placeholder="Ingrese su contraseña"
+                        [formField]="loginForm.password!">
+
+                </div>
+
+            </div>
+
+            <button
+                class="btn btn-login-custom w-100"
+                type="submit">
+
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                Ingresar
+
+            </button>
+
+        </form>
+
+        <div class="card-footer text-center small">
+
+            <strong>Uso interno autorizado</strong>
+
+            <br>
+
+            El acceso a este sistema está restringido al personal autorizado.
+
+        </div>
+
+    </div>
+
+</div>

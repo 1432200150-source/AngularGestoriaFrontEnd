@@ -1,0 +1,423 @@
+<div class="card contededor-principal mt-3 mb-3">
+    <div class="card-header">
+        <label class="card-title d-flex justify-content-center">Resumen</label>
+    </div>
+    <div class="card-body justify-content-center">
+        <div class="row mb-4 mt-4 justify-content-center">
+            <div class="col-md-2">
+                <div class="card border-warning shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                        <h6 class="mt-2">Pendientes</h6>
+                        <h3>{{totalPendientes()}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-check fs-2 text-primary"></i>
+                        <h6 class="mt-2">Agendados</h6>
+                        <h3>{{totalAgendados()}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card border-success shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check-circle fs-2 text-success"></i>
+                        <h6 class="mt-2">Finalizados</h6>
+                        <h3>{{totalFinalizados()}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card border-dark shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-list-task fs-2"></i>
+                        <h6 class="mt-2">Total</h6>
+                        <h3>{{ticketsLista().length}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-4">
+  <div class="text-center mb-3">
+    <div class="justify-content-center">
+      <button class="btn btn-outline-saveR px-1" type="button"  style="width: 190px;" (click)="nuevoTicket(); abrirModal()"><i class="bi bi-plus-lg me-2"></i> Nuevo ticket</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="card contededor-principal mt-3 mb-5">
+  <div class="card-header d-flex justify-content-center align-items-center">
+    <label class="titulo"><i class="bi bi-question-circle me-2"></i>Tickets</label>
+  </div>
+  <div class="card-body p-3">
+    <app-tabla-generica
+        [filas]="ticketsLista()"
+        [columnas]="columnasTickets"
+        [detalleTemplate]="detalleTicket"
+        titulo="Tickets registrados"
+        [mostrarBuscador]="true"
+        [limitePorPagina]="10"
+        (onAccion)="manejarAccionTabla($event)">
+    </app-tabla-generica>
+    <ng-template #detalleTicket let-ticket>
+      <div class="p-3 bg-light rounded">
+          <h5>Información del Ticket</h5>
+          <div class="row mb-3">
+              <div class="col-md-2"><strong>Sistema:</strong><span class="badge" [class]="colorSistema(ticket.sistema)">{{ticket.sistema}}</span></div>
+              <div class="col-md-2"><strong>Agente:</strong>{{ticket.agente}}</div>
+              <div class="col-md-2"><strong>Tipo:</strong>{{ticket.tipoSoporte}}</div>
+              <div class="col-md-4"><strong>Categoria:</strong>{{ticket.categoria}}</div>
+              <div class="col-md-2"><strong>Prioridad:</strong>{{ticket.prioridad}}</div>
+          </div>
+          <div class="row mb-3">
+              <div class="col-md-2">
+                <strong>Estatus:</strong>
+                @switch(ticket.estatus){
+                    @case('Finalizado'){
+                        <span class="badge bg-success text-white">
+                            {{ticket.estatus}}
+                        </span>
+                    }
+                    @case('Pendiente'){
+                        <span class="badge bg-danger text-white">
+                            {{ticket.estatus}}
+                        </span>
+                    }
+                    @case('Agendado'){
+                        <span class="badge bg-info text-white">
+                            {{ticket.estatus}}
+                        </span>
+                    }
+                    @default{
+                        <span class="badge bg-secondary">
+                            {{ticket.estatus}}
+                        </span>
+                    }
+                }
+            </div>
+              <div class="col-md-2"><strong>N°Cliente:</strong>{{ticket.numCliente}}</div>
+              <div class="col-md-4"><strong>Cliente:</strong>{{ticket.razonSocial}}</div>
+              <div class="col-md-2"><strong>RFC:</strong>{{ticket.rfc}}</div>
+              <div class="col-md-2"><strong>Escalado:</strong>{{ticket.escalado}}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3"><strong>Usuario quien Reporta:</strong>{{ticket.reporta}}</div>
+            <div class="col-md-3"><strong>Fecha Inicio:</strong> {{ ticket.fechaInicio | date:'dd/MM/yyyy' }}</div>
+            <div class="col-md-3"><strong>Fecha solución:</strong> {{ ticket.fechaSolucion | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <hr>
+          <div class="row mb-3">
+              <div class="col-md-12"><strong>Detalles</strong>
+                  <div class="border rounded p-3 mt-2 bg-white text-break">{{ticket.detalles}}</div>
+              </div>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Seguimientos</h6>
+              @if(ticket.estatus !== 'Finalizado'){
+              <button
+                  class="btn btn-sm btn-outline-saveR"
+                  (click)="nuevoSeguimiento(ticket)">
+                  <i class="bi bi-plus-lg"></i>
+                  Nuevo seguimiento
+              </button>
+              }
+
+          </div>
+          <div class="seguimientos">
+            @for(seg of ticket.seguimientos; track seg.id){
+            <div class="card mb-2 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-person-circle me-1"></i>{{seg.agente}}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <small class="text-muted"><i class="bi bi-clock me-2"></i>{{seg.fecha | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-primary"
+                            title="Editar seguimiento"
+                            (click)="editarSeguimiento(ticket, seg); $event.stopPropagation()">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-outline-danger"
+                            title="Eliminar seguimiento"
+                            (click)="eliminarSeguimiento(ticket, seg); $event.stopPropagation()">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body text-break">
+                    {{seg.comentarios}}
+                </div>
+
+            </div>
+
+            }
+          </div>
+      </div>
+      </ng-template>
+  </div>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+  @for (item of sistemasGraficas(); track item.nombreSistema) {
+    <div class="col">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-header fw-bold text-center">
+          {{ item.nombreSistema }}
+        </div>
+        <div class="card-body">
+          <div style="position: relative; height: 220px; width: 100%;">
+            <canvas #canvasGrafica></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+<div class="modal fade" 
+     id="modalTicket" 
+     tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    @if(modoFormulario()==='nuevo'){
+                        Nuevo Ticket
+                    }
+                    @else{
+                        Editar Ticket
+                    }
+                  </h5>
+                <button 
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal" (click)="limpiarFormulario()">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                  <div class="col-sm-3 col-lg-3 col-md-3">
+                      <label class="form-label">Sistema<i class="asterisco ms-2">*</i></label>
+                      <select class="form-select text-center" [class.is-invalid]="esInvalido(ticketForm.sistema().value())" [formField]="ticketForm.sistema" >
+                        <option value="" disabled selected>.::Seleccione::.</option>
+                        @for(opcion of opcionesSistemas(); track opcion.value){
+                          <option [value]="opcion.value">{{opcion.label}}</option>
+                        }
+                      </select>
+                  </div>
+                  <div class="col-lg-2 col-sm-3 col-md-2">
+                      <label class="form-label">Agente<i class="asterisco ms-2">*</i></label>
+                      <input class="form-control" type="text" readonly [value]="usuario?.nombre || ''" >
+                  </div>
+                  <div class="col-lg-3 col-sm-3 col-md-2">
+                    <label class="form-label">Tipo de soporte<i class="asterisco ms-2">*</i></label>
+                    <select
+                        class="form-select text-center"
+                        [class.is-invalid]="esInvalido(ticketForm.tipoSoporte().value())"
+                        [formField]="ticketForm.tipoSoporte"
+                        (change)="onTipoSoporteChange()">
+
+                        <option value="" disabled selected>.::Seleccione::.</option>
+
+                        @for(opcion of opcionesSoporte(); track opcion.value){
+                            <option [value]="opcion.value">
+                                {{opcion.label}}
+                            </option>
+                        }
+                    </select>
+                  </div>
+                  <div class="col-lg-3 col-sm-3 col-md-3">
+                    <label class="form-label">Categoria<i class="asterisco ms-2">*</i></label>
+                    <select
+                        class="form-select text-center"
+                        [class.is-invalid]="esInvalido(ticketForm.categoria().value())"
+                        [formField]="ticketForm.categoria">
+
+                        <option value="" disabled selected>.::Seleccione::.</option>
+
+                        @for(categoria of categoriaDisponible(); track categoria){
+                            <option [value]="categoria">
+                                {{categoria}}
+                            </option>
+                        }
+                    </select>
+                  </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-lg-2 col-sm-2 col-md-2">
+                  <label class="form-label">Prioridad<i class="asterisco ms-2">*</i></label>
+                  <select class="form-select text-center" [class.is-invalid]="esInvalido(ticketForm.prioridad().value())" [formField]="ticketForm.prioridad">
+                        <option value="" disabled selected>.::Seleccione::.</option>
+                        @for(opcion of  opcionesPrioridad(); track opcion.value){
+                          <option [value]="opcion.value">{{opcion.label}}</option>
+                        }
+                      </select>
+                </div>
+                <div class="col-lg-2 col-sm-2 col-md-2">
+                  <label class="form-label">Estatus<i class="asterisco ms-2">*</i></label>
+                  <select class="form-select text-center" [class.is-invalid]="esInvalido(ticketForm.estatus().value())" [formField]="ticketForm.estatus">
+                        <option value="" disabled selected>.::Seleccione::.</option>
+                        @for(opcion of  opcionesEstatus(); track opcion.value){
+                          <option [value]="opcion.value">{{opcion.label}}</option>
+                        }
+                      </select>
+                </div>
+                <div class="col-lg-2 col-sm-2 col-lg-2">
+                  <label class="form-label">No.Cliente<i class="asterisco ms-2">*</i></label>
+                  <input type="number" class="form-control" [class.is-invalid]="esInvalido(ticketForm.numCliente().value())" [formField]="ticketForm.numCliente">
+                </div>
+                <div class="col-lg-3 col-sm-3 col-lg-3">
+                  <label class="form-label">RFC<i class="asterisco ms-2">*</i></label>
+                  <input type="text" class="form-control" [class.is-invalid]="esInvalido(ticketForm.rfc().value())" [formField]="ticketForm.rfc">
+                </div>
+                <div class="col-lg-2 col-sm-2 col-md-2">
+                  <label class="form-label">Escalado<i class="asterisco ms-2">*</i></label>
+                  <select class="form-select text-center" [class.is-invalid]="esInvalido(ticketForm.escalado().value())" [formField]="ticketForm.escalado">
+                        <option value="" disabled selected>.::Seleccione::.</option>
+                        @for(opcion of  opcionesEscalado(); track opcion.value){
+                          <option [value]="opcion.value">{{opcion.label}}</option>
+                        }
+                      </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-lg-4 col-sm-6 col-md-4">
+                  <label class="form-label">Cliente<i class="asterisco ms-2">*</i></label>
+                  <input type="text" class="form-control" [class.is-invalid]="esInvalido(ticketForm.razonSocial().value())" [formField]="ticketForm.razonSocial" (focus)="mostrarSugerencias.set(sugerenciasClientes().length > 0)" (blur)="ocultarSugerenciasConRetraso()">
+                  @if (mostrarSugerencias()) {
+                    <ul class="list-group position-absolute w-100 shadow-sm" style="z-index: 1000;">
+                      @for (cliente of sugerenciasClientes(); track cliente.numCliente) {
+                        <li
+                          class="list-group-item list-group-item-action"
+                          (mousedown)="seleccionarCliente(cliente)">
+                          {{ cliente.razonSocial }}
+                          <small class="text-muted">({{ cliente.numCliente }} · {{ cliente.rfc }})</small>
+                        </li>
+                      }
+                    </ul>
+                  }
+                </div>
+                <div class="col-lg-3 col-sm-3 col-md-3">
+                  <label class="form-label">Usuario quien reporta<i class="asterisco ms-2">*</i></label>
+                  <input class="form-control" type="text" [class.is-invalid]="esInvalido(ticketForm.reporta().value())" [formField]="ticketForm.reporta">
+                </div>
+                <div class="col-lg-2 col-sm-2 col-md-2">
+                  <label class="form-label">Fecha inicio<i class="asterisco ms-2">*</i></label>
+                  <input class="form-control" type="date" [class.is-invalid]="esInvalido(ticketForm.fechaInicio().value())" [formField]="ticketForm.fechaInicio" >
+                </div>
+                @if (ticketForm.estatus().value() === 'Finalizado') {
+                  <div class="col-lg-2 col-sm-2 col-md-2">
+                    <label class="form-label">Fecha Fin<i class="asterisco ms-2">*</i></label>
+                    <input class="form-control" type="date" [formField]="ticketForm.fechaSolucion">
+                  </div>
+                }
+              </div>
+              <div class="row mb-3 align-items-center justify-content-center">
+                <div class="col-lg-8 col-sm-8 col-md-8">
+                  <label class="form-label">Detalles<i class="asterisco ms-2">*</i></label>
+                  <textarea class="form-control" [class.is-invalid]="esInvalido(ticketForm.detalles().value())" [formField]="ticketForm.detalles"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <button 
+                    type="button"
+                    class="btn btn-outline-reset px-1"
+                    data-bs-dismiss="modal" (click)="limpiarFormulario()">
+                    Cancelar
+                </button>
+                <button 
+                  class="btn btn-outline-saveR px-1"
+                  (click)="guardar($event)">
+                  @if(modoFormulario()==='nuevo'){
+                      Guardar
+                  }
+                  @else{
+                      Actualizar
+                  }
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="modal fade"
+    id="modalSeguimiento"
+    tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    @if(modoSeguimiento() === 'nuevo'){
+                        Nuevo seguimiento
+                    } @else {
+                        Editar seguimiento
+                    }
+                </h5>
+                <button
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">
+                        Comentarios
+                    </label>
+                    <textarea
+                        rows="6"
+                        class="form-control"
+                        [formField]="seguimientoForm.comentarios">
+                    </textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Estatus</label>
+                        <select class="form-select text-center" [formField]="seguimientoForm.estatus">
+                            <option>Pendiente</option>
+                            <option>Agendado</option>
+                            <option>Finalizado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Escalado</label>
+                        <select class="form-select text-center" [formField]="seguimientoForm.escalado">
+                            <option>Soporte</option>
+                            <option>Desarrollo</option>
+                            <option>Consultoria</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    class="btn btn-outline-reset"
+                    data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <button
+                    class="btn btn-outline-saveR px-1"
+                    (click)="guardarSeguimiento()">
+
+                    @if(modoSeguimiento() === 'nuevo'){
+                        Guardar
+                    } @else {
+                        Actualizar
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

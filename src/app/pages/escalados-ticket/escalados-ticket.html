@@ -1,0 +1,160 @@
+<div class="card contededor-principal mt-3 mb-3">
+    <div class="card-header">
+        <label class="card-title d-flex justify-content-center">Resumen</label>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4 mt-4 justify-content-center">
+            <div class="col-md-2">
+                <div class="card border-warning shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-hourglass-split fs-2 text-warning"></i>
+                        <h6 class="mt-2">Pendientes</h6>
+                        <h3>{{totalPendientes()}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-check fs-2 text-primary"></i>
+                        <h6 class="mt-2">Agendados</h6>
+                        <h3>{{totalAgendados()}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card border-success shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check-circle fs-2 text-success"></i>
+                        <h6 class="mt-2">Finalizados</h6>
+                        <h3>{{totalFinalizados()}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="card border-dark shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-list-task fs-2"></i>
+                        <h6 class="mt-2">Total</h6>
+                        <h3>{{escaladosLista().length}}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card contededor-principal mt-5 mb-5">
+    <div class="card-header d-flex justify-content-center">
+        <label class="titulo"><i class="bi bi-question-circle me-2"></i>Escalados</label>
+    </div>
+    <div class="card-body p-3">
+        <app-tabla-generica
+        [filas]="escaladosLista()"
+        [columnas]="columnasEscalados"
+        [detalleTemplate]="detalleTicket"
+        [mostrarBuscador]="true"
+        [limitePorPagina]="10"
+        (onAccion)="manejarAccionTabla($event)"
+        >
+            
+        </app-tabla-generica>
+        <ng-template #detalleTicket let-ticket>
+            <div class="p-3 bg-light rounded">
+                <h6>Informacion del ticket</h6>
+                <div class="row mb-3">
+                    <div class="col-md-2"><strong>N°Cliente:</strong>{{ticket.numCliente}}</div>
+                    <div class="col-md-6"><strong>Cliente:</strong>{{ticket.razonSocial}}</div>
+                    <div class="col-md-2"><strong>Estatus:</strong><span class="badge text-white" [style.background-color]="colorEstatus(ticket.estatusSoporte)">{{ticket.estatusSoporte}} </span></div>
+                    <div class="col-md-2"><strong>Estatus dev:</strong>{{ticket.estatusDesarrollo}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3"><strong>Fecha escalado:</strong>{{ticket.fechaEscalado |date:'dd/MM/yyyy'}}</div>
+                    <div class="col-md-3"><strong>Fecha atencion:</strong>{{ticket.fechaAtencion |date:'dd/MM/yyyy'}}</div>
+                    <div class="col-md-3"><strong>Fecha termino:</strong>{{ticket.fechaTermino |date:'dd/MM/yyyy'}}</div>
+                    <div class="col-md-2"><strong>Agente desarrollo:</strong>{{ticket.agenteDesarrllo}}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3"><strong>Lineas modificadas</strong>{{ticket.lineasModificadas}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><strong>Falla reportada</strong>
+                        <div class="border rounded p-3 mt-2 bg-white text-break">{{ticket.fallaReportada}}</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>Solucion propuesta</strong>
+                        <div class="border rounded p-3 mt-2 bg-white text-break">{{ticket.solucionPropuesta}}</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-12"><strong>Solucion real</strong>
+                        <div class="border rounded p-3 mt-2 bg-white text-break">{{ticket.solucionReal}}</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-2">
+                   @if(ticket.solucionPropuesta){
+                        <button
+                            class="btn btn-outline-primary"
+                            (click)="editarSolucion(ticket)">
+                            <i class="bi bi-pencil"></i>
+                            Editar solución
+                        </button>
+                    }
+                    @else{
+                        <button
+                            class="btn btn-outline-saveR"
+                            (click)="editarSolucion(ticket)">
+                            <i class="bi bi-plus-lg"></i>
+                            Agregar solución
+                        </button>
+                    }
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSolucion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title d-flex justify-content-center">
+                   Solucion
+                </h6>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <label class="form-label">Solucion propuesta</label>
+                        <textarea class="form-control" [formField]="solucionForm.solucionPropuesta"></textarea>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="form-label">Solucion Real</label>
+                        <textarea class="form-control" [formField]="solucionForm.solucionReal"></textarea>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Lineas modificadas</label>
+                            <input class="form-control" type="text" [formField]="solucionForm.lineasModificadas">
+                        </div>
+                         <div class="col-md-4">
+                        <label class="form-label">Estatus</label>
+                        <select class="form-select text-center" [formField]="solucionForm.estatusDesarrollo">
+                            <option>Pendiente</option>
+                            <option>Agendado</option>
+                            <option>Finalizado</option>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-reset px-1" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-outline-saveR px-1" (click)="guardarSolucion()">
+                       Guardar
+                    </button>
+                </div>
+        </div>
+    </div>
+</div>
