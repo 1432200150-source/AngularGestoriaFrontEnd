@@ -1,0 +1,254 @@
+<div class="justify-content-center text-center mt-3 mb-3">
+    <p>Gracias por contratar nuestros servicios</p>
+    <p>para realizar la instalacion, es necesario que complete el siguiente formulario</p>
+</div>
+<div class="card contededor-principal">
+    <div class="card-header">
+        <label class="titulo d-flex justify-content-center">Registro</label>
+    </div>
+    <div class="card-body">
+        <div class="accordion" id="accordionInstalacion">
+            <div class="accordion-item">
+                <h6 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Datos de la empresa
+                    </button>
+                </h6>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-target="#accordionInstalacion">
+                    <div class="accordion-body">
+                        <p class=" d-flex justify-content-center text-center">En este apartado debes capturar información necesaria para el funcionamiento del sistema. El RFC, razón social y domicilio fiscal deben capturarse como se muestra en la Constancia de Situación Fiscal</p>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Razon social<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">RFC<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="file" #archivoCSF accept="application/pdf" hidden (change)="seleccionarCSF($event)">
+                                <button class="btn btn-outline-saveR me-2" (click)="archivoCSF.click()">{{ pdfCSF ? 'Cambiar CSF' : 'Seleccionar CSF' }}</button>
+                                @if(pdfCSF){
+                                    <button class="btn btn-outline-saveR" (click)="verCSF()" title="Ver PDF"><i class="bi bi-search"></i></button>
+                                }
+                                
+                            </div>
+                        </div>
+                        <div class="row mb-3 justify-content-center">
+                            <button type="button" class="btn btn-outline-saveR me-2" style="width: 160px;" (click)="abrirModalFiscal()">Domicilio fiscal</button>
+                            <button type="button" class="btn btn-outline-saveR" style="width: 160px;" (click)="abrirModalUsuarios()">Domicilio usuarios</button>
+                        </div>
+                        <div class="row mb-3 justify-content-center">
+                            <div class="col-md-10">
+                                <label class="form-label">Contraseña para servicios web VUCEM<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                                <label class="form-label asterisco">Para saber cual es su clave, consulte la pagina del SAT para obtenerla</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Numero aproximado de operaciones por año<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Agrega las aduanas donde tienes operaciones<i class="asterisco me-2">*</i></label>
+                                <select class="form-select text-center" [(ngModel)]="idAduanaSeleccionada">
+                                    <option value="" disabled>.::Seleccione aduana::.</option>
+                                        @for (item of aduanas$ | async; track item.id) {
+                                            <option [value]="item.id">
+                                            {{ item.numAduana }} - {{ item.aduana }}
+                                            </option>
+                                        }
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-outline-saveR" style="width: 110px;" (click)="agregarAduana()">Agregar</button>
+                            </div>
+                        </div>
+                        @if(aduanasSeleccionadas.length >0){
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <app-tabla-generica [filas]="aduanasSeleccionadas" [columnas]="columnasAduana" [mostrarBuscador]="false" [limitePorPagina]="5" (onAccion)="manejarAccionTabla($event)">
+
+                                    </app-tabla-generica>
+                                </div>
+                            </div>
+                        }
+                        <div class="row mb-3 justify-content-end">
+                            <button type="button" class="btn btn-outline-saveR me-4" style="width: 100px;">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h6 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Datos del contacto
+                    </button>
+                </h6>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionInstalacion">
+                    <div class="accordion-body">
+                        <p>hola</p>
+                    </div>
+                </div>
+            </div>
+             <div class="accordion-item">
+                <h6 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Datos del administrador
+                    </button>
+                </h6>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionInstalacion">
+                    <div class="accordion-body">
+                        <p>hola</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (mostrarModalPdf) {
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Constancia de Situación Fiscal
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        (click)="cerrarModalPdf()">
+                    </button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe
+                        [src]="pdfCSFUrl"
+                        width="100%"
+                        height="700px"
+                        style="border: none;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" (click)="cerrarModalPdf()"></div>
+}
+
+<div class="modal fade" id="modalFiscal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title d-flex justify-content-center w-100">Domicilio fiscal</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <p class="text-center">Captura los datos tal como se encuentran en la constancia de situación fiscal</p>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Calle<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.calle">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">No.Ext<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.noExt">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">No.Int</label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.noInt">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Colonia<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.colonia">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Municipio<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.municipio">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Estado<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.estado">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">C.P.<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.cp">
+                    </div>
+                </div>
+                <div class="modal-footer mb-3 justify-content-center">
+                    <button type="button" class="btn btn-outline-saveR me-2" style="width: 160px;" (click)="agregarDomicilioFiscal()">{{ modoEdicion ? 'Actualizar' : 'Agregar' }}</button>
+                    <button type="button" class="btn btn-outline-reset px-1" style="width: 160px;" (click)="limpiarDomicilio()">Limpiar</button>
+                </div>
+                @if(listaDomicilioFiscal.length >0){
+                    <div class="row mb-3">
+                        <app-tabla-generica [filas]="listaDomicilioFiscal" [columnas]="columnasDomicilioFiscal" [mostrarBuscador]="true" (onAccion)="ejecutarAccionDomicilioFiscal($event)"></app-tabla-generica>
+                    </div>
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalUsuarios" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title d-flex justify-content-center w-100">Domicilio fiscal</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <p class="text-center">Captura el o los domicilios de la empresa donde los usuarios tendrán acceso al sistema cuando sea diferente del domicilio fiscal</p>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Calle<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">No.Ext<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">No.Int</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Colonia<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Municipio<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Estado<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">C.P.<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Sede<i class="asterisco me-2">*</i></label>
+                        <input type="text" class="form-control">
+                        <label class="form-label asterisco">Captura el nombre con el que identificas este domicilio</label>
+                    </div>
+                </div>
+                <div class="modal-footer mb-3 justify-content-center">
+                    <button type="button" class="btn btn-outline-saveR me-2" style="width: 160px;">Agregar</button>
+                    <button type="button" class="btn btn-outline-reset px-1" style="width: 160px;">Limpiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

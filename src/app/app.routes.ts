@@ -5,6 +5,7 @@ import { AltaUsuario } from './features/alta-usuario/alta-usuario';
 import { authGuard } from './guards/auth-guard';
 import { TicketsView } from './pages/tickets-view/tickets-view';
 import { EscaladosTicket } from './pages/escalados-ticket/escalados-ticket';
+import { InstalacionesView } from './pages/instalaciones-view/instalaciones-view';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,11 @@ export const routes: Routes = [
   {
     path:'escalados',
     component:EscaladosTicket,
+    canActivate:[authGuard]
+  },
+  {
+    path:'instalacion',
+    component:InstalacionesView,
     canActivate:[authGuard]
   },
   {

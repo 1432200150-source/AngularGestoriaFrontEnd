@@ -3,22 +3,14 @@
     <h2 class="text-center mb-4">
         Hola de nuevo {{usuario()}}
     </h2>
-    <div class="row g-4">
+    <div class="row g-4 mb-3">
         <div class="col-md-4">
             <div class="card shadow h-100">
                 <div class="card-body text-center">
                     <i class="bi bi-person-plus fs-1 text-primary"></i>
-                    <h5 class="card-title mt-3">
-                         Usuarios
-                    </h5>
-                    <p class="card-text">
-                        Registrar un nuevo usuario en el sistema.
-                    </p>
-                    <a
-                        routerLink="/alta-usuario"
-                        class="btn btn-primary">
-                        Ir
-                    </a>
+                    <h5 class="card-title mt-3">Usuarios</h5>
+                    <p class="card-text">Registrar un nuevo usuario en el sistema.</p>
+                    <a routerLink="/alta-usuario" class="btn btn-primary">Ir</a>
                 </div>
             </div>
         </div>
@@ -43,7 +35,7 @@
         <div class="col-md-4">
             <div class="card shadow h-100">
                 <div class="card-body text-center">
-                    <i class="bi bi-table fs-1 text-warning"></i>
+                    <i class="bi bi-card-checklist fs-1 text-warning"></i>
                     <h5 class="card-title mt-3">
                         Escalados
                     </h5>
@@ -54,6 +46,26 @@
                         routerLink="/escalados"
                         class="btn btn-primary">
                         ir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 ">
+         <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-text fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">
+                         Instalacion
+                    </h5>
+                    <p class="card-text">
+                        Formulario para instalacion
+                    </p>
+                    <a
+                        routerLink="/instalacion"
+                        class="btn btn-primary">
+                        Ir
                     </a>
                 </div>
             </div>

@@ -24,7 +24,7 @@ const solucionInicial:ActualizarEscalado={
 
 @Component({
   selector: 'app-escalados-ticket',
-  imports: [TablaGenerica, DatePipe, FormField, NgStyle],
+  imports: [TablaGenerica, DatePipe, FormField],
   templateUrl: './escalados-ticket.html',
   styleUrl: './escalados-ticket.css',
 })
