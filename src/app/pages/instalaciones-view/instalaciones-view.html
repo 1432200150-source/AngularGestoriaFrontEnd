@@ -10,25 +10,28 @@
         <div class="accordion" id="accordionInstalacion">
             <div class="accordion-item">
                 <h6 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Datos de la empresa
+                    <button class="accordion-button d-flex align-items-center justify-content-between" [class.collapsed]="seccion1Completa" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" [attr.aria-expanded]="!seccion1Completa" aria-controls="collapseOne">
+                       <span class="justify-content-center w-100">Datos de la empresa</span> 
+                       @if(seccion1Completa){
+                        <i class="bi bi-check-circle-fill text-success ms-2 fs-5" title="Sección completada"></i>
+                       }
                     </button>
                 </h6>
-                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-target="#accordionInstalacion">
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionInstalacion">
                     <div class="accordion-body">
                         <p class=" d-flex justify-content-center text-center">En este apartado debes capturar información necesaria para el funcionamiento del sistema. El RFC, razón social y domicilio fiscal deben capturarse como se muestra en la Constancia de Situación Fiscal</p>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Razon social<i class="asterisco me-2">*</i></label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="datosEmpresaForm.razonSocial" [class.is-invalid]="intentoSiguiente1 && !datosEmpresaForm.razonSocial.trim()">
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">RFC<i class="asterisco me-2">*</i></label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" maxlength="13" [(ngModel)]="datosEmpresaForm.rfc" [class.is-invalid]="intentoSiguiente1 && !datosEmpresaForm.rfc.trim()">
                             </div>
                             <div class="col-md-3">
                                 <input type="file" #archivoCSF accept="application/pdf" hidden (change)="seleccionarCSF($event)">
-                                <button class="btn btn-outline-saveR me-2" (click)="archivoCSF.click()">{{ pdfCSF ? 'Cambiar CSF' : 'Seleccionar CSF' }}</button>
+                                <button class="btn btn-outline-saveR me-2" [class.border-danger]="intentoSiguiente1 && !pdfCSF" (click)="archivoCSF.click()">{{ pdfCSF ? 'Cambiar CSF' : 'Seleccionar CSF' }}</button>
                                 @if(pdfCSF){
                                     <button class="btn btn-outline-saveR" (click)="verCSF()" title="Ver PDF"><i class="bi bi-search"></i></button>
                                 }
@@ -39,17 +42,22 @@
                             <button type="button" class="btn btn-outline-saveR me-2" style="width: 160px;" (click)="abrirModalFiscal()">Domicilio fiscal</button>
                             <button type="button" class="btn btn-outline-saveR" style="width: 160px;" (click)="abrirModalUsuarios()">Domicilio usuarios</button>
                         </div>
+                        @if(ambasListasUsuarios.length>0){
+                            <div class="row mb-3">
+                                <app-tabla-generica [filas]="ambasListasUsuarios" [columnas]="columnasDomicilios" [mostrarBuscador]="false" (onAccion)="ejecutarAccionDomicilioGeneral($event)"></app-tabla-generica>
+                            </div>
+                        }
                         <div class="row mb-3 justify-content-center">
                             <div class="col-md-10">
                                 <label class="form-label">Contraseña para servicios web VUCEM<i class="asterisco me-2">*</i></label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="datosEmpresaForm.claveVucem" [class.is-invalid]="intentoSiguiente1 && !datosEmpresaForm.claveVucem.trim()">
                                 <label class="form-label asterisco">Para saber cual es su clave, consulte la pagina del SAT para obtenerla</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label class="form-label">Numero aproximado de operaciones por año<i class="asterisco me-2">*</i></label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="datosEmpresaForm.operacionesAno" [class.is-invalid]="intentoSiguiente1 && !datosEmpresaForm.operacionesAno.trim()">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Agrega las aduanas donde tienes operaciones<i class="asterisco me-2">*</i></label>
@@ -76,20 +84,82 @@
                             </div>
                         }
                         <div class="row mb-3 justify-content-end">
-                            <button type="button" class="btn btn-outline-saveR me-4" style="width: 100px;">Siguiente</button>
+                            <button type="button" class="btn btn-outline-saveR me-4" style="width: 100px;" (click)="siguienteSeccion1()">Siguiente</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="accordion-item">
                 <h6 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Datos del contacto
+                    <button class="accordion-button collapsed d-flex align-items-center justify-content-between" [class.collapsed]="seccion2Completa"type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                       <span> Datos del contacto</span>
+                       @if (seccion2Completa) {
+                            <i class="bi bi-check-circle-fill text-success ms-2 fs-5" title="Sección completada"></i>
+                        }
                     </button>
                 </h6>
                 <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionInstalacion">
                     <div class="accordion-body">
-                        <p>hola</p>
+                        <p class="justify-content-center text-center">Captura al menos contacto de sistemas, quien proporcionará información técnica para el acceso, instalación y futuros soportes. También debes capturar al menos un contacto de comercio, quien se ocupará del proceso administración de la contratación, instalación e implementación</p>
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Tipo<i class="asterisco me-2">*</i></label>
+                                <select class="form-select text-center" [(ngModel)]="contactoFormulario.tipo"[class.is-invalid]="intentoGuardarContacto && !contactoFormulario.tipo" >
+                                    <option value="" disabled>::Sistemas/Comercio::.</option>
+                                    <option value="Sistemas">Sistemas</option>
+                                    <option value="Comercio">Comercio</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.nombre" [class.is-invalid]="intentoGuardarContacto && !contactoFormulario.nombre">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Correo electronico<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.correo" [class.is-invalid]="intentoGuardarContacto && !contactoFormulario.correo">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido paterno<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.apellidoPaterno" [class.is-invalid]="intentoGuardarContacto && !contactoFormulario.apellidoPaterno">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Confirmacion de correo electronico<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.confirmarCorreo" [class.is-invalid]="intentoGuardarContacto && !contactoFormulario.confirmarCorreo">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido materno<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.apellidoMaterno">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Telefono 1</label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.telefono1">
+                            </div>
+                        </div>
+                        <div class="row mb-3 justify-content-end mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Telefono 2</label>
+                                <input type="text" class="form-control" [(ngModel)]="contactoFormulario.telefono2">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <button class="btn btn-outline-saveR me-2" type="button" style="width: 160px;" (click)="agregarContacto()">{{ modoEdicionContacto ? 'Actualizar' : 'Agregar' }}</button>
+                            <button class="btn btn-outline-reset" type="button" style="width: 160px;" (click)="limpiarContacto()">Limpiar</button>
+                        </div>
+                        @if(listaContactos.length>0){
+                            <div class="row mb-3">
+                                <app-tabla-generica [filas]="listaContactos" [columnas]="columnasContacto" [mostrarBuscador]="false" [limitePorPagina]="5" (onAccion)="ejecutarAccionContacto($event)"></app-tabla-generica>
+                            </div>
+                        }
+                        <div class="row justify-content-end">
+                            <button class="btn btn-outline-saveR me-2" type="button" style="width: 110px;" (click)="anteriorSeccion2()">Anterior</button>
+                            <button class="btn btn-outline-saveR" type="button" style="width: 110px;" (click)="siguienteSeccion2()">Sguimiente</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,7 +171,94 @@
                 </h6>
                 <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionInstalacion">
                     <div class="accordion-body">
-                        <p>hola</p>
+                        <p class="justify-content-center text-center">Captura los datos del usuario administrador. Este usuario tiene acceso a todas las funciones del sistema y será quien agregará los usuarios adicionales</p>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Correo electronico<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">apellido Paterno<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Confirmacion correo electronico<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-md-6">
+                                <label class="form-label">apellido Materno<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </label>
+                            <div class="col-md-6">
+                                <label class="form-label">Telefono 1</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">¿Como te gusta que te llamen?<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Telefono 2</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Cumpleaños<i class="asterisco me-2">*</i></label>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select text-center" [(ngModel)]="adminFormulario.diaCumpleanos">
+                                        <option value="" disabled selected>Día</option>
+                                        @for (dia of dias; track dia) {
+                                            <option [value]="dia">{{ dia }}</option>
+                                        }
+                                    </select>
+                                    <select class="form-select text-center" [(ngModel)]="adminFormulario.mesCumpleanos">
+                                        <option value="" disabled selected>Mes</option>
+                                        @for (m of meses; track m.numero) {
+                                            <option [value]="m.numero">
+                                            {{ m.numero }} - {{ m.nombre }}
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Usuario<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Puesto o cargo<i class="asterisco me-2">*</i></label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sede<i class="asterisco me-2">*</i></label>
+                                <select class="form-select text-center" [(ngModel)]="adminFormulario.sede">
+                                    <option value="" disabled selected>.::Seleccione::.</option>
+                                    @for (sede of sedesDisponibles; track $index) {
+                                        <option [value]="sede">{{ sede }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <button class="btn btn-outline-reset" style="width: 120px;">Limpiar</button>
+                        </div>
+                        <div class="row justify-content-end">
+                            <button class="btn btn-outline-saveR me-2" style="width: 110px;">Anterior</button>
+                            <button class="btn btn-outline-saveR" style="width: 110px;">Enviar</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,11 +305,11 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Calle<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.calle">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.calle"  [class.is-invalid]="campoInvalido('calle')"  [class.is-valid]="intentoGuardar && !campoInvalido('calle')">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">No.Ext<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.noExt">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.noExt"  [class.is-invalid]="campoInvalido('noExt')"  [class.is-valid]="intentoGuardar && !campoInvalido('noExt')">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">No.Int</label>
@@ -162,21 +319,21 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Colonia<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.colonia">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.colonia"  [class.is-invalid]="campoInvalido('colonia')"  [class.is-valid]="intentoGuardar && !campoInvalido('colonia')">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Municipio<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.municipio">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.municipio"  [class.is-invalid]="campoInvalido('municipio')" [class.is-valid]="intentoGuardar && !campoInvalido('municipio')">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Estado<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.estado">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.estado"  [class.is-invalid]="campoInvalido('estado')"  [class.is-valid]="intentoGuardar && !campoInvalido('estado')">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">C.P.<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.cp">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioFormulario.cp" maxlength="6" [class.is-invalid]="campoInvalido('cp')"  [class.is-valid]="intentoGuardar && !campoInvalido('cp')">  
                     </div>
                 </div>
                 <div class="modal-footer mb-3 justify-content-center">
@@ -198,7 +355,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title d-flex justify-content-center w-100">Domicilio fiscal</h6>
+                <h6 class="modal-title d-flex justify-content-center w-100">Domicilio usuarios</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <p class="text-center">Captura el o los domicilios de la empresa donde los usuarios tendrán acceso al sistema cuando sea diferente del domicilio fiscal</p>
@@ -206,48 +363,51 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Calle<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" [(ngModel)]="domicilioUsuariosFormulario.calle" [class.is-invalid]="campoInvalidoUsuario('calle')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('calle')">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">No.Ext<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.noExt" [class.is-invalid]="campoInvalidoUsuario('noExt')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('noExt')">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">No.Int</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.noInt">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Colonia<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.colonia" [class.is-invalid]="campoInvalidoUsuario('colonia')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('colonia')">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Municipio<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.municipio" [class.is-invalid]="campoInvalidoUsuario('municipio')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('municipio')">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Estado<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.estado" [class.is-invalid]="campoInvalidoUsuario('estado')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('estado')">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">C.P.<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.cp" [class.is-invalid]="campoInvalidoUsuario('cp')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('cp')" maxlength="6">
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Sede<i class="asterisco me-2">*</i></label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control"  [(ngModel)]="domicilioUsuariosFormulario.sede" [class.is-invalid]="campoInvalidoUsuario('sede')"  [class.is-valid]="intentoGuardar && !campoInvalidoUsuario('sede')">
                         <label class="form-label asterisco">Captura el nombre con el que identificas este domicilio</label>
                     </div>
                 </div>
                 <div class="modal-footer mb-3 justify-content-center">
-                    <button type="button" class="btn btn-outline-saveR me-2" style="width: 160px;">Agregar</button>
-                    <button type="button" class="btn btn-outline-reset px-1" style="width: 160px;">Limpiar</button>
+                    <button type="button" class="btn btn-outline-saveR me-2" style="width: 160px;" (click)="agregarDomicilioUsuario()">{{ modoEdicion ? 'Actualizar' : 'Agregar' }}</button>
+                    <button type="button" class="btn btn-outline-reset px-1" style="width: 160px;" (click)="limpiarDomicilioUsuario()">Limpiar</button>
                 </div>
+                @if(listaDomicilioUsuario.length>0){
+                    <app-tabla-generica [filas]="listaDomicilioUsuario" [columnas]="columnasDomicilioUsuario" [mostrarBuscador]="false" (onAccion)="ejecutarAccionDomicilioUsuarios($event)"></app-tabla-generica>
+                }
             </div>
         </div>
     </div>
